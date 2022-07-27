@@ -51,7 +51,7 @@ make_long <- function(
 categorize_nodes <- function(
   d,
   cutpoints,
-  labels = NULL,
+  labels,
   na_level = "Dropout/Withdrawal",
   ...
 )
@@ -65,6 +65,14 @@ categorize_nodes <- function(
       y <- labels
 
     forcats::fct_recode(x, !!!y)
+  }
+
+  if (is_invalid(cutpoints)) {
+    cutpoints <- median(d$node, na.rm = TRUE)
+  }
+
+  if (is_invalid(labels)) {
+    labels <- c(na_level, levels(keystone::cut2q(d$node, cuts = cutpoints, ...)))
   }
 
   r <- d %>% dplyr::mutate(across(ends_with("node"), ~ keystone::cut2q(.x, cuts = cutpoints, ...))) %>%

@@ -1,6 +1,7 @@
 #' @export
 prepare_sas_data <- function(
   sas_dir,
+  id_var,
   sas_files_re = "\\.sas7bdat$",
   recursive = FALSE,
   catalog_file = NULL,
@@ -18,8 +19,7 @@ prepare_sas_data <- function(
         cat(sprintf("Processing file %s...", basename(a))); utils::flush.console()
       }
 
-      d <- rio::import(a, catalog_file = catalog_file) %>%
-        dplyr::rename(gapid = tidyselect::matches("gapid", ignore.case = TRUE))
+      d <- rio::import(a, catalog_file = catalog_file)
       ## 'capture.output()' & 'sink()' don't work with 'readr::type_convert()' at all!
       invisible(capture.output({ dd <- d %>% readr::type_convert() }))
       plyr::l_ply(names(d), function(b) { mostattributes(dd[[b]]) <<- attributes(d[[b]]) })
@@ -28,8 +28,8 @@ prepare_sas_data <- function(
       ddd <- dd %>% dplyr::mutate_if(is_sas_factor, r_ify_sas_factor)
       ddd0 <- rlang::duplicate(ddd, shallow = FALSE)
       ## Make long data sets into wide ones for summarizing
-      if (anyDuplicated(ddd$gapid)) { # 'anyDuplicated()' can handle NULL variables
-        long_to_wideArgs <- list(x = ddd)
+      if (anyDuplicated(ddd[[id_var]])) { # 'anyDuplicated()' can handle NULL variables
+        long_to_wideArgs <- list(x = ddd, id_cols = id_var)
         long_to_wideArgs <- utils::modifyList(long_to_wideArgs, long_to_wide..., keep.null = TRUE)
 
         ddd <- do.call(long_to_wide, long_to_wideArgs)
@@ -41,9 +41,9 @@ prepare_sas_data <- function(
       }
 
       if (!keep_long)
-        ddd
+        tibble::as_tibble(ddd)
       else
-        list(wide = ddd, long = ddd0)
+        sapply(list(wide = ddd, long = ddd0), tibble::as_tibble)
     }, simplify = FALSE)
 
   assign(list_variable_name, l)
@@ -56,7 +56,8 @@ prepare_sas_data <- function(
 long_to_wide <- function(
   x,
   long_var = "Assessment",
-  id_cols = c("gapid", "COACHID")
+  id_cols = c("gapid"),
+  non_value_cols = NULL
 )
 {
   xx <- x %>%
@@ -64,7 +65,7 @@ long_to_wide <- function(
     tidyr::pivot_wider(
       id_cols = any_of(id_cols),
       names_from = !!long_var,
-      values_from = -any_of(c(id_cols, long_var))
+      values_from = -any_of(c(id_cols, long_var, non_value_cols))
     )
 
   xx
