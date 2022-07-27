@@ -93,7 +93,7 @@ plot_sankeypro <- function(
     ## Label order: NA/missing category, < 1st cutpoint, >= 1st cut & < 2nd cut, >= 2nd cut & < 3d cut, ...
     categorize_nodes(cutpoints = node_cutpoints, fmt = node_fmt, labels = node_labels)
 
-  if (is_invalid(node_colors)) {
+  if (keystone::is_invalid(node_colors)) {
     node_colors <- colorspace::rainbow_hcl(nlevels(d_s$node))
   }
 

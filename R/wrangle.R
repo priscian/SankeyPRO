@@ -67,11 +67,11 @@ categorize_nodes <- function(
     forcats::fct_recode(x, !!!y)
   }
 
-  if (is_invalid(cutpoints)) {
+  if (keystone::is_invalid(cutpoints)) {
     cutpoints <- median(d$node, na.rm = TRUE)
   }
 
-  if (is_invalid(labels)) {
+  if (keystone::is_invalid(labels)) {
     labels <- c(na_level, levels(keystone::cut2q(d$node, cuts = cutpoints, ...)))
   }
 
