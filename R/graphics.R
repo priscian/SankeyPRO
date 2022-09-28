@@ -83,6 +83,7 @@ plot_sankeypro <- function(
 
   w <- do.call(long_to_wide, long_to_wideArgs)
 
+  browser()
   d <- w %>%
     dplyr::select(matches(sprintf("^%s.*?$", pro_var), perl = TRUE)) %>%
     dplyr::rename_with(~ stringr::str_match(.x, "^.*?_(.*?)$")[, 2]) %>%
@@ -109,5 +110,5 @@ plot_sankeypro <- function(
   if (show_plot)
     print(p)
 
-  p
+  invisible(p)
 }

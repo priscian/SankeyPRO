@@ -6,7 +6,7 @@ Authors@R: person("Jim", "Java", email = "james.j.java@gmail.com", role = c("aut
 Description: Create Sankey diagrams from patient-recorded outcomes (PRO) data or other data.
 Depends: R (>= 3.5.0), magrittr, tribe, dplyr
 Suggests: knitr, pander, testthat
-Imports: SASxport, ggsankey, colorspace, sjmisc, keystone
+Imports: ggsankey, colorspace, sjmisc, keystone
 Remotes: github::priscian/keystone, github::warnes/SASxport, github::davidsjoberg/ggsankey
 License: Artistic-2.0
 Encoding: UTF-8
