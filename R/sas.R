@@ -60,12 +60,19 @@ long_to_wide <- function(
   non_value_cols = NULL
 )
 {
-  xx <- x %>%
+  names_glue <- NULL
+  valuesFrom <- x %>% dplyr::select(-any_of(c(id_cols, long_var, non_value_cols))) %>% colnames
+  ## Always include variable name as a prefix:
+  if (length(valuesFrom) == 1)
+    names_glue <- "{.value}_{.name}"
+  xx <- x %>%# dplyr::mutate(!!long_var := as.character(.[[long_var]])) %>%
     dplyr::filter(!is.na(!!long_var)) %>%
     tidyr::pivot_wider(
       id_cols = any_of(id_cols),
+      names_glue = names_glue,
       names_from = !!long_var,
-      values_from = -any_of(c(id_cols, long_var, non_value_cols))
+      #values_from = -any_of(c(id_cols, long_var, non_value_cols))
+      values_from = !!valuesFrom
     )
 
   xx

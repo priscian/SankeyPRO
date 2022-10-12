@@ -1,6 +1,6 @@
 Package: SankeyPRO
 Title: Create Sankey Diagrams from Patient-Recorded Outcomes (PRO) or Other Data
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: person("Jim", "Java", email = "james.j.java@gmail.com", role = c("aut", "cre"),
   comment = c(ORCID = "0000-0002-8254-3177"))
 Description: Create Sankey diagrams from patient-recorded outcomes (PRO) data or other data.

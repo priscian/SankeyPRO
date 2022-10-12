@@ -83,10 +83,9 @@ plot_sankeypro <- function(
 
   w <- do.call(long_to_wide, long_to_wideArgs)
 
-  browser()
   d <- w %>%
     dplyr::select(matches(sprintf("^%s.*?$", pro_var), perl = TRUE)) %>%
-    dplyr::rename_with(~ stringr::str_match(.x, "^.*?_(.*?)$")[, 2]) %>%
+    dplyr::rename_with(~ stringr::str_match(.x, "^.*_(.*?)$")[, 2]) %>%
     handle_missings(remove_intermittent = remove_intermittent)
 
   ## Create "sankeypro" data frame customized for plotting

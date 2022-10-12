@@ -53,6 +53,7 @@ categorize_nodes <- function(
   cutpoints,
   labels,
   na_level = "Dropout/Withdrawal",
+  central_fun = stats::mean,
   ...
 )
 {
@@ -68,7 +69,7 @@ categorize_nodes <- function(
   }
 
   if (keystone::is_invalid(cutpoints)) {
-    cutpoints <- median(d$node, na.rm = TRUE)
+    cutpoints <- central_fun(d$node, na.rm = TRUE)
   }
 
   if (keystone::is_invalid(labels)) {
